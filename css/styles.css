@@ -538,6 +538,19 @@ button:focus-visible, input:focus-visible { outline: 4px solid var(--lavender-st
 .trotting .leg { transform-box: fill-box; transform-origin: 50% 0; animation: trot 0.3s ease-in-out infinite alternate; }
 .trotting .leg-b { animation-direction: alternate-reverse; }
 .trotting .wag { transform-box: fill-box; transform-origin: 100% 100%; animation: wag 0.25s ease-in-out infinite alternate; }
+/* Goose step: each stiff leg kicks forward in turn, arms swing opposite */
+.trotting .march, .trotting .swing { transform-box: fill-box; transform-origin: 50% 0; animation: goose-step 0.7s ease-in-out infinite; }
+.trotting .march-b { animation-delay: -0.35s; }
+.trotting .swing { animation-name: arm-swing; animation-duration: 0.35s; animation-direction: alternate; }
+.trotting .swing-b { animation-delay: -0.35s; }
+@keyframes goose-step {
+  0%, 50%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-80deg); }
+}
+@keyframes arm-swing {
+  from { transform: rotate(-30deg); }
+  to { transform: rotate(30deg); }
+}
 @keyframes trot {
   from { transform: rotate(-24deg); }
   to { transform: rotate(24deg); }
@@ -700,6 +713,53 @@ button:focus-visible, input:focus-visible { outline: 4px solid var(--lavender-st
   .setup-hero { grid-template-columns: 1fr 3fr 1fr; }
   .pick-grid--species { grid-template-columns: repeat(4, 1fr); }
   .picker-side { width: 130px; }
+}
+
+/* Phones held upright: the whole game screen fits in one viewport, no scrolling.
+   The board keeps its natural height and the keypad stretches into what is left. */
+@media (max-width: 600px) and (orientation: portrait) {
+  #app { padding: calc(8px + var(--safe-top)) 10px calc(8px + var(--safe-bottom)); }
+  .game { display: flex; flex-direction: column; height: 100%; min-height: 0; gap: 8px; }
+  .board { display: flex; flex-direction: column; gap: 8px; }
+
+  .topbar-title { font-size: 1.1rem; }
+  .small-btn { padding: 7px 12px; font-size: 0.85rem; }
+  .sound-btn { width: 42px; padding: 7px 0; font-size: 1rem; }
+
+  .hero { grid-template-columns: 64px 1fr; gap: 8px; padding: 8px 10px; box-shadow: var(--shadow-soft), 0 0 0 5px rgba(255, 200, 228, 0.45); }
+  .hero-label { font-size: 0.95rem; }
+  .hero-label strong { font-size: 1.05rem; }
+  .hero-score { font-size: 3.2rem; }
+  .hero-unit { display: none; }
+  .slots { gap: 6px; margin-top: 4px; }
+  .slot { width: 56px; height: 40px; border-radius: 14px; font-size: 1rem; }
+  .slot b { font-size: 1rem; }
+  .slot small { font-size: 0.7rem; }
+  .hint { height: 26px; margin-top: 4px; font-size: 0.85rem; gap: 4px; }
+  .hint-dart { padding: 1px 8px; }
+
+  /* One swipeable row of compact chips instead of a wrapping grid */
+  .scoreboard { display: flex; gap: 8px; overflow-x: auto; overflow-y: hidden; padding: 4px; margin: -4px; scrollbar-width: none; }
+  .scoreboard::-webkit-scrollbar { display: none; }
+  .chip { flex: 0 0 auto; min-width: 112px; grid-template-columns: 30px 1fr; grid-template-areas: "avatar name" "avatar score"; padding: 5px 8px; column-gap: 6px; }
+  .chip.is-active { transform: none; box-shadow: 0 0 0 3px var(--pink); }
+  .chip-avatar { width: 30px; }
+  .chip-name { font-size: 0.85rem; }
+  .chip-score { font-size: 1.2rem; }
+  .chip-avg { display: none; }
+
+  /* The peeking head is scaled from its bottom edge, so it still rests on the keypad border */
+  .keypad { flex: 1; min-height: 0; margin-top: 46px; padding: 10px; gap: 8px; grid-template-rows: auto minmax(0, 1fr) auto; }
+  .peek { transform: scale(0.68); transform-origin: bottom right; right: 20px; }
+  .mod { padding: 7px 0; font-size: 1rem; }
+  .numbers { gap: 7px; grid-template-rows: repeat(4, minmax(0, 1fr)); grid-auto-rows: unset; }
+  .key { min-height: 0; font-size: 1.45rem; }
+  .extras { gap: 7px; }
+  .extras .key { min-height: 46px; font-size: 1rem; }
+
+  .fx-label { font-size: 1.9rem; padding: 8px 18px; }
+  .fx-label--triple, .fx-label--outer-bull { font-size: 2.3rem; }
+  .fx-label--bull { font-size: 2.9rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {

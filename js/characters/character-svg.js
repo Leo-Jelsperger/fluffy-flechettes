@@ -178,8 +178,10 @@ export function characterProfileSvg(character) {
   };
   const body = parts.body ?? `<ellipse cx="62" cy="62" rx="36" ry="23" fill="${palette.main}" ${OUTLINE}/>`;
   const cheek = `<ellipse cx="${parts.cheek.x}" cy="${parts.cheek.y}" rx="5" ry="3.2" fill="${BLUSH}" opacity=".8"/>`;
+  // Upright species draw their own two legs in `beforeBody`.
+  const fourLegs = parts.upright ? "" : `${legPairSvg({ xs: LEGS.FAR_X, legs, far: true })}${legPairSvg({ xs: LEGS.NEAR_X, legs, far: false })}`;
   return `<svg class="mascot profile" viewBox="-14 -26 164 130" aria-hidden="true">
-    ${parts.tail}${legPairSvg({ xs: LEGS.FAR_X, legs, far: true })}${legPairSvg({ xs: LEGS.NEAR_X, legs, far: false })}
+    ${parts.tail}${fourLegs}
     ${parts.beforeBody ?? ""}${body}${parts.bodyDecor ?? ""}${parts.head}${cheek}
     ${profileEyeSvg({ eye: parts.eye, darkEye: parts.darkEye === true })}${profileAccessorySvg({ accessory: character.accessory, parts })}
   </svg>`;

@@ -8,9 +8,31 @@ import { CARICATURE_HAIR, LINE, OUTLINE, THIN_OUTLINE, outlinedStroke, radialSpi
 /** Directions (degrees) of the lizard's frill seen from the side: fanned out behind the head. */
 const LIZARD_SIDE_FRILL_DEG = Object.freeze([-150, -120, -90, -60, 150, 180, 120]);
 
+/** Joints of the upright (two-legged) side view, in the profile viewBox. */
+const UPRIGHT = Object.freeze({ HIP_Y: 68, LEG_LENGTH: 34, SHOULDER_Y: 44, ARM_LENGTH: 24 });
+const LEG = Object.freeze({ WIDTH: 11, END_HEIGHT: 10 });
+const ARM = Object.freeze({ WIDTH: 9, END_HEIGHT: 7 });
+
+/**
+ * A stiff limb hanging from its joint, ending in a boot or a hand; the
+ * stylesheet swings it around its top edge.
+ * @param {{ className: string, x: number, y: number, length: number, size: { WIDTH: number, END_HEIGHT: number }, fill: string, endFill: string, far: boolean }} params - animation classes, joint position, length, LEG or ARM size, sleeve colour, boot/hand colour, whether behind the body
+ * @returns {string} SVG markup
+ */
+function marchingLimb(params) {
+  const { className, x, y, length, size, fill, endFill, far } = params;
+  const left = x - size.WIDTH / 2;
+  const shade = far ? `opacity=".8"` : "";
+  return `<g class="${className}" ${shade}>
+    <rect x="${left}" y="${y}" width="${size.WIDTH}" height="${length}" rx="${size.WIDTH / 2}" fill="${fill}" ${OUTLINE}/>
+    <rect x="${left - 1}" y="${y + length - size.END_HEIGHT}" width="${size.WIDTH + 4}" height="${size.END_HEIGHT}" rx="4" fill="${endFill}" ${THIN_OUTLINE}/>
+  </g>`;
+}
+
 /**
  * @typedef {{ x: number, y: number }} Point
  * @typedef {{
+ *   upright?: boolean,
  *   tail: string, beforeBody?: string, body?: string, bodyDecor?: string, head: string,
  *   legs?: { w?: number, h?: number, y?: number, fill?: string },
  *   eye: Point, top: Point, cheek: Point, darkEye?: boolean
@@ -123,21 +145,28 @@ export const PROFILE_SPECIES = {
     cheek: { x: 112, y: 44 },
   }),
 
+  // The only biped: stands upright and marches with stiff legs (see `.march` in the stylesheet).
   nazi: (p) => ({
+    upright: true,
     tail: "",
-    body: `<ellipse cx="62" cy="62" rx="36" ry="21" fill="${p.light}" ${OUTLINE}/>
-      <path d="M78 44 L78 80" stroke="${LINE}" stroke-width="2" opacity=".3"/>
-      <g fill="${LINE}" opacity=".45"><circle cx="84" cy="52" r="1.8"/><circle cx="84" cy="62" r="1.8"/></g>`,
-    legs: { fill: CARICATURE_HAIR },
-    head: `<circle cx="98" cy="44" r="4.5" fill="${p.main}" ${THIN_OUTLINE}/>
-      <circle cx="105" cy="42" r="20" fill="${p.main}" ${OUTLINE}/>
-      <ellipse cx="125" cy="45" rx="4" ry="4.5" fill="${p.main}" ${THIN_OUTLINE}/>
-      <rect x="116" y="50" width="9" height="4.5" rx="1.2" fill="${CARICATURE_HAIR}"/>
-      <path d="M114 30 Q122 33 122 40 Q117 36 112 36Z" fill="${CARICATURE_HAIR}"/>
-      <path d="M82 42 Q82 16 105 16 Q128 18 127 36 L131 42 Q121 40 118 34 L92 34 Q90 44 80 48Z" fill="${p.accent}" ${OUTLINE}/>`,
-    eye: { x: 115, y: 41 },
-    top: { x: 106, y: 15 },
-    cheek: { x: 111, y: 51 },
+    beforeBody: `${marchingLimb({ className: "march march-b", x: 68, y: UPRIGHT.HIP_Y, length: UPRIGHT.LEG_LENGTH, size: LEG, fill: p.light, endFill: CARICATURE_HAIR, far: true })}
+      ${marchingLimb({ className: "march march-a", x: 76, y: UPRIGHT.HIP_Y, length: UPRIGHT.LEG_LENGTH, size: LEG, fill: p.light, endFill: CARICATURE_HAIR, far: false })}
+      ${marchingLimb({ className: "swing swing-a", x: 78, y: UPRIGHT.SHOULDER_Y, length: UPRIGHT.ARM_LENGTH, size: ARM, fill: p.light, endFill: p.main, far: true })}`,
+    body: `<rect x="56" y="38" width="38" height="38" rx="14" fill="${p.light}" ${OUTLINE}/>
+      <rect x="57" y="62" width="36" height="5" fill="${CARICATURE_HAIR}" opacity=".75"/>
+      <g fill="${LINE}" opacity=".45"><circle cx="86" cy="47" r="1.8"/><circle cx="86" cy="55" r="1.8"/></g>`,
+    bodyDecor: marchingLimb({ className: "swing swing-b", x: 70, y: UPRIGHT.SHOULDER_Y, length: UPRIGHT.ARM_LENGTH, size: ARM, fill: p.light, endFill: p.main, far: false }),
+    head: `<g transform="translate(-31 -22)">
+        <circle cx="98" cy="44" r="4.5" fill="${p.main}" ${THIN_OUTLINE}/>
+        <circle cx="105" cy="42" r="20" fill="${p.main}" ${OUTLINE}/>
+        <ellipse cx="125" cy="45" rx="4" ry="4.5" fill="${p.main}" ${THIN_OUTLINE}/>
+        <rect x="116" y="50" width="9" height="4.5" rx="1.2" fill="${CARICATURE_HAIR}"/>
+        <path d="M114 30 Q122 33 122 40 Q117 36 112 36Z" fill="${CARICATURE_HAIR}"/>
+        <path d="M82 42 Q82 16 105 16 Q128 18 127 36 L131 42 Q121 40 118 34 L92 34 Q90 44 80 48Z" fill="${p.accent}" ${OUTLINE}/>
+      </g>`,
+    eye: { x: 84, y: 19 },
+    top: { x: 75, y: -4 },
+    cheek: { x: 80, y: 29 },
   }),
 
   dog: (p) => ({
