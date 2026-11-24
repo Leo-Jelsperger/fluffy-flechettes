@@ -20,7 +20,7 @@ const DEFAULT_PLAYER_COUNT = 2;
  * @typedef {{ name: string, character: Character }} SetupPlayer
  * @typedef {{ players: SetupPlayer[], startScore: number, doubleOut: boolean }} SetupState
  * @typedef {{ config: import("./game.js").GameConfig, darts: import("./game.js").Dart[] }} Game
- * @typedef {{ screen: string, setup: SetupState, game: Game | null, modifier: number, picker: number | null }} AppState
+ * @typedef {{ screen: string, setup: SetupState, game: Game | null, modifier: number, picker: number | null, soundOn: boolean }} AppState
  */
 
 /**
@@ -38,7 +38,17 @@ export function createDefaultAppState() {
     game: null,
     modifier: MULTIPLIER.SINGLE,
     picker: null,
+    soundOn: true,
   };
+}
+
+/**
+ * Turns the sounds on or off.
+ * @param {AppState} app - current state
+ * @returns {AppState} new state
+ */
+export function toggleSound(app) {
+  return { ...app, soundOn: !app.soundOn };
 }
 
 /**

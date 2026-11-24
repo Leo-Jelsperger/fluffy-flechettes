@@ -4,7 +4,7 @@
  * used when the network is unreachable. Bump CACHE_VERSION when files are
  * added or removed.
  */
-const CACHE_VERSION = "fluffy-darts-v5";
+const CACHE_VERSION = "fluffy-darts-v6";
 
 const APP_SHELL = [
   "./",
@@ -20,6 +20,8 @@ const APP_SHELL = [
   "./js/runner.js",
   "./js/fx-layer.js",
   "./js/screen-effects.js",
+  "./js/sound/synth.js",
+  "./js/sound/sounds.js",
   "./js/characters/character-catalog.js",
   "./js/characters/character-svg.js",
   "./js/characters/front-species.js",

@@ -49,15 +49,13 @@ function renderDartSlots(darts) {
 /**
  * Checkout hint line for the current player.
  * @param {{ remaining: number, dartsLeft: number, doubleOut: boolean }} params - score left and rules
- * @returns {string} HTML (empty when the score is out of checkout range)
+ * @returns {string} HTML; the line is always rendered (empty when no finish exists) so the card keeps a fixed height
  */
 function renderCheckoutHint(params) {
   const darts = suggestCheckout(params);
-  if (darts) {
-    const labels = darts.map((dart) => `<span class="hint-dart">${escapeHtml(formatDart(dart))}</span>`).join("");
-    return `<p class="hint">🦄 ${escapeHtml(t("game_checkout"))} ${labels}</p>`;
-  }
-  return "";
+  if (!darts) return `<p class="hint is-empty" aria-hidden="true"></p>`;
+  const labels = darts.map((dart) => `<span class="hint-dart">${escapeHtml(formatDart(dart))}</span>`).join("");
+  return `<p class="hint">🦄 ${escapeHtml(t("game_checkout"))} ${labels}</p>`;
 }
 
 /**
@@ -178,18 +176,22 @@ function renderWinOverlay(params) {
 
 /**
  * Renders the game screen.
- * @param {{ game: import("../app-actions.js").Game, state: import("../game.js").GameState, modifier: number }} params - persisted game, derived state, selected ring
+ * @param {{ game: import("../app-actions.js").Game, state: import("../game.js").GameState, modifier: number, soundOn: boolean }} params - persisted game, derived state, selected ring, sound switch
  * @returns {string} HTML
  */
 export function renderGameView(params) {
-  const { game, state, modifier } = params;
+  const { game, state, modifier, soundOn } = params;
   const { config } = game;
   const overlay = state.winner === null ? "" : renderWinOverlay({ config, state });
+  const soundLabel = soundOn ? t("game_sound_mute") : t("game_sound_unmute");
   return `<main class="game">
     <div class="board">
       <header class="topbar">
         <h1 class="topbar-title">${escapeHtml(t("app_title"))} <span class="topbar-badge">${config.startScore}</span></h1>
-        <button class="puffy small-btn" data-action="quit">🏠 ${escapeHtml(t("game_menu"))}</button>
+        <div class="topbar-actions">
+          <button class="puffy small-btn sound-btn" data-action="toggle-sound" aria-pressed="${soundOn}" aria-label="${escapeHtml(soundLabel)}">${soundOn ? "🔊" : "🔇"}</button>
+          <button class="puffy small-btn" data-action="quit">🏠 ${escapeHtml(t("game_menu"))}</button>
+        </div>
       </header>
       ${renderHero({ config, state })}
       ${renderScoreboard({ config, state })}

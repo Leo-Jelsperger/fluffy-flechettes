@@ -8,8 +8,12 @@ import { MOOD, characterSvg } from "./characters/character-svg.js";
 import { runAcross } from "./runner.js";
 import { centerOf, fxLayer, mount, prefersReducedMotion, screenCenter } from "./fx-layer.js";
 import { FLASH, RING, SHAKE, banner, burst, flash, rainCharacters, rainEmojis, shake, shockwave } from "./screen-effects.js";
+import { SOUND } from "./sound/sounds.js";
 import { escapeHtml } from "./dom.js";
 import { t } from "./messages.js";
+
+/** Delay before a turn's sound, so it follows the last dart's sound instead of covering it. */
+const TURN_SOUND_DELAY_MS = 250;
 
 const DURATION_MS = Object.freeze({ LABEL: 1400, POP: 1500, POPUP: 2600, TOAST: 1800 });
 
@@ -90,8 +94,19 @@ function parade(characters) {
   const layer = fxLayer();
   if (!layer || prefersReducedMotion()) return;
   for (const [index, character] of characters.entries()) {
-    runAcross({ layer, character, delayMs: index * PARADE_STAGGER_MS });
+    const delayMs = index * PARADE_STAGGER_MS;
+    runAcross({ layer, character, delayMs });
+    setTimeout(SOUND.whee, delayMs);
   }
+}
+
+/**
+ * Plays a turn sound slightly after the dart's own sound, so the two don't blur.
+ * @param {() => void} sound - one of SOUND
+ * @returns {void}
+ */
+function playTurnSound(sound) {
+  setTimeout(sound, TURN_SOUND_DELAY_MS);
 }
 
 /**
@@ -104,12 +119,14 @@ export function playDartEffect(params) {
   const { dart, rect, character } = params;
   const origin = centerOf(rect);
   if (dart.segment === MISS_SEGMENT) {
+    SOUND.miss();
     floatLabel({ rect, text: t("fx_dart_miss"), variant: "miss" });
     burst({ ...origin, count: COUNT.MISS, emojis: EMOJIS.MISS, spread: SPREAD_PX.SPARKLE, sizeRem: SIZE_REM.MEDIUM });
     shake(SHAKE.SMALL);
     return;
   }
   if (dart.segment === BULL_SEGMENT && dart.multiplier === MULTIPLIER.DOUBLE) {
+    SOUND.bull();
     floatLabel({ rect, text: t("fx_dart_bull"), variant: "bull" });
     burst({ ...origin, count: COUNT.BULL, emojis: EMOJIS.BULL, spread: SPREAD_PX.BULL, sizeRem: SIZE_REM.LARGE });
     shockwave({ ...origin, color: RING.RAINBOW });
@@ -119,6 +136,7 @@ export function playDartEffect(params) {
     return;
   }
   if (dart.segment === BULL_SEGMENT) {
+    SOUND.outerBull();
     floatLabel({ rect, text: t("fx_dart_outer_bull"), variant: "outer-bull" });
     burst({ ...origin, count: COUNT.OUTER_BULL, emojis: EMOJIS.OUTER_BULL, spread: SPREAD_PX.KEY, sizeRem: SIZE_REM.MEDIUM });
     shockwave({ ...origin, color: RING.PINK });
@@ -126,6 +144,7 @@ export function playDartEffect(params) {
     return;
   }
   if (dart.multiplier === MULTIPLIER.TRIPLE) {
+    SOUND.triple();
     floatLabel({ rect, text: t("fx_dart_triple"), variant: "triple" });
     burst({ ...origin, count: COUNT.TRIPLE, emojis: EMOJIS.TRIPLE, spread: SPREAD_PX.BULL, sizeRem: SIZE_REM.LARGE });
     shockwave({ ...origin, color: RING.LAVENDER });
@@ -135,6 +154,7 @@ export function playDartEffect(params) {
     return;
   }
   if (dart.multiplier === MULTIPLIER.DOUBLE) {
+    SOUND.double();
     floatLabel({ rect, text: t("fx_dart_double"), variant: "double" });
     burst({ ...origin, count: COUNT.DOUBLE, emojis: EMOJIS.DOUBLE, spread: SPREAD_PX.KEY, sizeRem: SIZE_REM.MEDIUM });
     shockwave({ ...origin, color: RING.MINT });
@@ -142,6 +162,7 @@ export function playDartEffect(params) {
     shake(SHAKE.SMALL);
     return;
   }
+  SOUND.pop();
   burst({ ...origin, count: COUNT.SPARKLE, emojis: EMOJIS.SPARKLE, spread: SPREAD_PX.SPARKLE, sizeRem: SIZE_REM.SMALL });
   shockwave({ ...origin, color: RING.SOFT });
 }
@@ -194,6 +215,7 @@ function celebrateBigTurn(params) {
   const art = characterSvg({ character: player.character, mood: MOOD.HAPPY });
   const title = t("fx_ton_title", { total: turn.total });
   if (turn.total === TURN_SCORE.MAX) {
+    playTurnSound(SOUND.maxTurn);
     showPopup({ art, title: t("fx_max_title"), subtitle: t("fx_max_subtitle", { name: player.name }), variant: "magic" });
     banner(t("fx_max_title"));
     flash(FLASH.RAINBOW);
@@ -205,6 +227,7 @@ function celebrateBigTurn(params) {
     return;
   }
   if (turn.total >= TURN_SCORE.PARADE) {
+    playTurnSound(SOUND.parade);
     showPopup({ art, title, subtitle: t("fx_big_subtitle"), variant: "magic" });
     banner(title);
     flash(FLASH.RAINBOW);
@@ -213,6 +236,7 @@ function celebrateBigTurn(params) {
     rainCharacters({ count: COUNT.CHARACTER_RAIN_SMALL, characters: [player.character] });
     return;
   }
+  playTurnSound(SOUND.ton);
   showPopup({ art, title, subtitle: t("fx_ton_subtitle", { name: player.name }), variant: "happy" });
   banner(title);
   flash(FLASH.PINK);
@@ -233,6 +257,7 @@ export function playTurnEffect(params) {
     return;
   }
   if (turn.bust) {
+    playTurnSound(SOUND.bust);
     const art = characterSvg({ character: player.character, mood: MOOD.SAD });
     showPopup({ art, title: t("fx_bust_title"), subtitle: t("fx_bust_subtitle", { name: player.name }), variant: "sad" });
     flash(FLASH.BLUE);
@@ -245,6 +270,7 @@ export function playTurnEffect(params) {
     return;
   }
   if (turn.total >= TURN_SCORE.NICE) {
+    playTurnSound(SOUND.niceTurn);
     burst({ ...screenCenter(), count: COUNT.HEARTS, emojis: EMOJIS.HEARTS, spread: SPREAD_PX.CENTER, sizeRem: SIZE_REM.MEDIUM });
     flash(FLASH.PINK);
     showToast(t("fx_turn_nice", { name: player.name, total: turn.total }));
@@ -260,6 +286,7 @@ export function playTurnEffect(params) {
  */
 export function celebrateWin(params) {
   const { winner, friends } = params;
+  playTurnSound(SOUND.win);
   flash(FLASH.RAINBOW);
   shake(SHAKE.BIG);
   burst({ ...screenCenter(), count: COUNT.MAGIC, emojis: EMOJIS.MAGIC, spread: SPREAD_PX.HUGE, sizeRem: SIZE_REM.LARGE });

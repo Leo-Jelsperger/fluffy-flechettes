@@ -286,6 +286,9 @@ button:focus-visible, input:focus-visible { outline: 4px solid var(--lavender-st
 .topbar-title { margin: 0; font-size: 1.5rem; color: var(--pink-strong); text-shadow: 0 2px 0 #fff; }
 .topbar-badge { display: inline-block; font-size: 0.9rem; background: var(--lavender); color: var(--ink); padding: 3px 12px; border-radius: 999px; vertical-align: middle; }
 .small-btn { padding: 10px 16px; font-size: 0.95rem; }
+.topbar-actions { display: flex; gap: 10px; flex-shrink: 0; }
+.sound-btn { width: 52px; padding: 10px 0; font-size: 1.2rem; }
+.toggle--spaced { margin-top: 16px; }
 
 .hero {
   position: relative;
@@ -301,7 +304,7 @@ button:focus-visible, input:focus-visible { outline: 4px solid var(--lavender-st
 }
 .hero-avatar { max-width: 150px; justify-self: center; width: 100%; }
 .hero-main { text-align: center; }
-.hero-label { margin: 0; font-size: 1.2rem; color: var(--ink-soft); }
+.hero-label { margin: 0; font-size: 1.2rem; color: var(--ink-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .hero-label strong { color: var(--ink); font-size: 1.4rem; }
 .hero-score {
   margin: 2px 0 0;
@@ -332,7 +335,8 @@ button:focus-visible, input:focus-visible { outline: 4px solid var(--lavender-st
   to { transform: scale(1); }
 }
 
-.hint { margin: 12px 0 0; display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 6px; font-weight: 600; }
+/* Fixed height whether or not a finish is shown, so the cards and keypad never jump */
+.hint { height: 36px; margin: 12px 0 0; display: flex; justify-content: center; align-items: center; flex-wrap: nowrap; gap: 6px; font-weight: 600; white-space: nowrap; overflow: hidden; }
 .hint-dart { background: var(--mint); border: 2px solid #fff; padding: 3px 12px; border-radius: 999px; }
 
 .scoreboard { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; align-content: start; overflow-y: auto; }

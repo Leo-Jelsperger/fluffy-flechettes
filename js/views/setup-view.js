@@ -66,11 +66,11 @@ function renderOpenPicker(params) {
 
 /**
  * Renders the setup screen.
- * @param {{ setup: import("../app-actions.js").SetupState, picker: number | null, canResume: boolean }} params - setup state, edited slot, whether a game can be resumed
+ * @param {{ setup: import("../app-actions.js").SetupState, picker: number | null, canResume: boolean, soundOn: boolean }} params - setup state, edited slot, whether a game can be resumed, sound switch
  * @returns {string} HTML
  */
 export function renderSetupView(params) {
-  const { setup, picker, canResume } = params;
+  const { setup, picker, canResume, soundOn } = params;
   const canRemove = setup.players.length > PLAYER_LIMITS.MIN;
   let rows = "";
   for (const [index, player] of setup.players.entries()) {
@@ -106,6 +106,10 @@ export function renderSetupView(params) {
       <button class="toggle" role="switch" aria-checked="${setup.doubleOut}" data-action="toggle-double-out">
         <span class="toggle-track"><span class="toggle-thumb"></span></span>
         <span class="toggle-text"><strong>${escapeHtml(t("setup_double_out"))}</strong><small>${escapeHtml(t("setup_double_out_hint"))}</small></span>
+      </button>
+      <button class="toggle toggle--spaced" role="switch" aria-checked="${soundOn}" data-action="toggle-sound">
+        <span class="toggle-track"><span class="toggle-thumb"></span></span>
+        <span class="toggle-text"><strong>🔊 ${escapeHtml(t("setup_sound"))}</strong><small>${escapeHtml(t("setup_sound_hint"))}</small></span>
       </button>
     </section>
     <button class="puffy start-btn" data-action="start-game">${escapeHtml(t("setup_start"))} 🌈</button>

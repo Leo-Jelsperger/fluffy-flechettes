@@ -55,7 +55,8 @@ function isGame(value) {
  */
 function isAppState(value) {
   if (typeof value !== "object" || value === null) return false;
-  const { screen, setup, game, modifier, picker } = value;
+  const { screen, setup, game, modifier, picker, soundOn } = value;
+  if (soundOn !== undefined && typeof soundOn !== "boolean") return false;
   if (!Object.values(SCREEN).includes(screen) || !Object.values(MULTIPLIER).includes(modifier)) return false;
   if (typeof setup !== "object" || setup === null || !isPlayerList(setup.players)) return false;
   const setupOk = START_SCORES.includes(setup.startScore) && typeof setup.doubleOut === "boolean";
@@ -73,7 +74,9 @@ export function loadAppState() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw === null) return null;
     const parsed = JSON.parse(raw);
-    return isAppState(parsed) ? parsed : null;
+    if (!isAppState(parsed)) return null;
+    // Saves from before the sound switch existed have no `soundOn`: sounds start on.
+    return { ...parsed, soundOn: parsed.soundOn !== false };
   } catch (error) {
     console.warn("Could not restore the saved game", error);
     return null;

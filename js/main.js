@@ -18,6 +18,7 @@ import {
   startGame,
   throwDart,
   toggleDoubleOut,
+  toggleSound,
   undoDart,
   updatePickedCharacter,
 } from "./app-actions.js";
@@ -25,6 +26,8 @@ import { replayGame } from "./game.js";
 import { loadAppState, saveAppState } from "./storage.js";
 import { celebrateWin, playDartEffect, playTurnEffect } from "./effects.js";
 import { keepScreenAwake, registerServiceWorker } from "./pwa.js";
+import { setSoundEnabled, unlockAudio } from "./sound/synth.js";
+import { SOUND } from "./sound/sounds.js";
 import { renderSetupView } from "./views/setup-view.js";
 import { renderGameView } from "./views/game-view.js";
 import { t } from "./messages.js";
@@ -43,6 +46,7 @@ const ACTIONS = {
   "remove-player": (current, target) => removePlayer({ app: current, index: Number(target.dataset.index) }),
   "set-start-score": (current, target) => setStartScore({ app: current, startScore: Number(target.dataset.value) }),
   "toggle-double-out": (current) => toggleDoubleOut(current),
+  "toggle-sound": (current) => toggleSound(current),
   "start-game": (current) => startGame(current),
   "resume-game": (current) => ({ ...current, screen: SCREEN.GAME }),
   "set-modifier": (current, target) => setModifier({ app: current, multiplier: Number(target.dataset.value) }),
@@ -63,12 +67,12 @@ const ACTIONS = {
 function render() {
   if (app.screen === SCREEN.GAME && app.game) {
     const state = replayGame(app.game);
-    root.innerHTML = renderGameView({ game: app.game, state, modifier: app.modifier });
+    root.innerHTML = renderGameView({ game: app.game, state, modifier: app.modifier, soundOn: app.soundOn });
     return;
   }
   const canResume = app.game !== null && replayGame(app.game).winner === null;
   const pickerScroll = document.querySelector(".picker-card")?.scrollTop ?? 0;
-  root.innerHTML = renderSetupView({ setup: app.setup, picker: app.picker, canResume });
+  root.innerHTML = renderSetupView({ setup: app.setup, picker: app.picker, canResume, soundOn: app.soundOn });
   const pickerCard = document.querySelector(".picker-card");
   if (pickerCard) pickerCard.scrollTop = pickerScroll;
 }
@@ -80,6 +84,7 @@ function render() {
  */
 function commit(next) {
   app = next;
+  setSoundEnabled(app.soundOn);
   saveAppState(app);
   render();
 }
@@ -123,6 +128,7 @@ function handleQuit() {
  * @returns {void}
  */
 function handleClick(event) {
+  unlockAudio();
   const target = event.target instanceof Element ? event.target.closest("[data-action]") : null;
   if (!(target instanceof HTMLElement) || target.hasAttribute("disabled")) return;
   const { action } = target.dataset;
@@ -138,6 +144,7 @@ function handleClick(event) {
   if (!transition) return;
   commit(transition(app, target));
   if (action === "start-game" || action === "resume-game") void keepScreenAwake();
+  if (action === "toggle-sound") SOUND.double();
 }
 
 /**
@@ -163,5 +170,6 @@ function handleVisibilityChange() {
 document.addEventListener("click", handleClick);
 document.addEventListener("input", handleInput);
 document.addEventListener("visibilitychange", handleVisibilityChange);
+setSoundEnabled(app.soundOn);
 render();
 registerServiceWorker();
