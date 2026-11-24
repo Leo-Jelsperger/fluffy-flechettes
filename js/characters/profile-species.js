@@ -161,7 +161,6 @@ export const PROFILE_SPECIES = {
         <circle cx="105" cy="42" r="20" fill="${p.main}" ${OUTLINE}/>
         <ellipse cx="125" cy="45" rx="4" ry="4.5" fill="${p.main}" ${THIN_OUTLINE}/>
         <rect x="116" y="50" width="9" height="4.5" rx="1.2" fill="${CARICATURE_HAIR}"/>
-        <path d="M114 30 Q122 33 122 40 Q117 36 112 36Z" fill="${CARICATURE_HAIR}"/>
         <path d="M82 42 Q82 16 105 16 Q128 18 127 36 L131 42 Q121 40 118 34 L92 34 Q90 44 80 48Z" fill="${p.accent}" ${OUTLINE}/>
       </g>`,
     eye: { x: 84, y: 19 },

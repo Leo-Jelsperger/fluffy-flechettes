@@ -127,13 +127,13 @@ export const FRONT_SPECIES = {
     head: `<ellipse cx="50" cy="61" rx="30" ry="30" fill="${p.main}" ${OUTLINE}/>`,
     front: `<path d="M14 48 Q14 12 50 12 Q86 12 86 48 L92 56 Q80 55 75 48 L25 48 Q20 55 8 56Z" fill="${p.accent}" ${OUTLINE}/>
       <path d="M24 44 Q50 40 76 44" fill="none" stroke="${LINE}" stroke-width="2" opacity=".4"/>
-      <path d="M27 48 Q42 46 52 57 Q41 53 30 55Z" fill="${CARICATURE_HAIR}" ${THIN_OUTLINE}/>
-      <ellipse cx="50" cy="64" rx="4.5" ry="3.2" fill="#f3bfa0"/>
-      <rect x="44" y="67.5" width="12" height="5.5" rx="1.5" fill="${CARICATURE_HAIR}"/>`,
-    eyeY: 56,
+      <path d="M25 46 Q50 45 73 56 Q54 53 33 53Z" fill="${CARICATURE_HAIR}" ${THIN_OUTLINE}/>
+      <ellipse cx="50" cy="67" rx="4.5" ry="3.2" fill="#f3bfa0"/>
+      <rect x="44" y="70.5" width="12" height="5.5" rx="1.5" fill="${CARICATURE_HAIR}"/>`,
+    eyeY: 60,
     topY: 14,
     hatX: 62,
-    mouth: { style: MOUTH.SMILE, y: 77 },
+    mouth: { style: MOUTH.SMILE, y: 80 },
     cheekDx: 20,
   }),
 
