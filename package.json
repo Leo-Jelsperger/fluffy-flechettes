@@ -1,0 +1,9 @@
+{
+  "name": "fluffy-darts",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "start": "python3 serve.py"
+  }
+}
