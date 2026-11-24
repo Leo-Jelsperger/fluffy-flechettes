@@ -11,6 +11,9 @@ export const BLUSH = "#ff9ec7";
 /** Hair and toothbrush-mustache colour of the caricature, the same in every variant. */
 export const CARICATURE_HAIR = "#4a3a3a";
 
+/** Fixed colours of the peaked officer cap (the crown colour varies). */
+export const CAP = Object.freeze({ BAND: CARICATURE_HAIR, VISOR: "#3a2e35", CORD: "#e4e2ea" });
+
 /** Light-blue tear for sad faces. */
 export const TEAR = "#8fd3ff";
 

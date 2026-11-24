@@ -3,7 +3,7 @@
  * layers plus the anchors the shared face and accessories are placed on.
  * Eyes are always at x = 37 and x = 63 so glasses fit every species.
  */
-import { CARICATURE_HAIR, LINE, OUTLINE, THIN_OUTLINE, outlinedStroke, radialSpikes } from "./svg-style.js";
+import { CAP, CARICATURE_HAIR, LINE, OUTLINE, THIN_OUTLINE, outlinedStroke, radialSpikes } from "./svg-style.js";
 
 /** Directions (degrees, 0 = right, -90 = up) of the lizard's frill spikes: a collar open at the chin. */
 const LIZARD_FRILL_DEG = Object.freeze([-200, -170, -140, -110, -90, -70, -40, -10, 20]);
@@ -125,16 +125,19 @@ export const FRONT_SPECIES = {
   nazi: (p) => ({
     back: `<circle cx="20" cy="62" r="7" fill="${p.main}" ${OUTLINE}/><circle cx="80" cy="62" r="7" fill="${p.main}" ${OUTLINE}/>`,
     head: `<ellipse cx="50" cy="61" rx="30" ry="30" fill="${p.main}" ${OUTLINE}/>`,
-    // The forelock is drawn first so the helmet brim covers its root.
-    front: `<path d="M26 40 Q50 41 73 56 Q54 53 33 53Z" fill="${CARICATURE_HAIR}" ${THIN_OUTLINE}/>
-      <path d="M14 48 Q14 12 50 12 Q86 12 86 48 L92 56 Q80 55 75 48 L25 48 Q20 55 8 56Z" fill="${p.accent}" ${OUTLINE}/>
-      <path d="M24 44 Q50 40 76 44" fill="none" stroke="${LINE}" stroke-width="2" opacity=".4"/>
-      <ellipse cx="50" cy="67" rx="4.5" ry="3.2" fill="#f3bfa0"/>
-      <rect x="44" y="70.5" width="12" height="5.5" rx="1.5" fill="${CARICATURE_HAIR}"/>`,
-    eyeY: 60,
-    topY: 14,
+    // Peaked officer cap, no insignia. The forelock is drawn first so the visor covers its root.
+    front: `<path d="M30 45 Q56 47 81 58 Q62 55 42 54Z" fill="${CARICATURE_HAIR}" ${THIN_OUTLINE}/>
+      <path d="M22 36 L78 36 L78 46 Q50 50 22 46Z" fill="${CAP.BAND}" ${OUTLINE}/>
+      <path d="M6 30 Q8 8 50 8 Q92 8 94 30 Q86 39 50 39 Q14 39 6 30Z" fill="${p.accent}" ${OUTLINE}/>
+      <path d="M12 29 Q50 20 88 29" fill="none" stroke="#fff" stroke-width="2.2" opacity=".85"/>
+      <path d="M24 44 Q50 50 76 44 Q73 53 50 53 Q27 53 24 44Z" fill="${CAP.VISOR}" ${OUTLINE}/>
+      <path d="M25 44 Q50 49 75 44" fill="none" stroke="${CAP.CORD}" stroke-width="2.6" stroke-linecap="round"/>
+      <ellipse cx="50" cy="70" rx="4.5" ry="3.2" fill="#f3bfa0"/>
+      <rect x="44" y="73.5" width="12" height="5.5" rx="1.5" fill="${CARICATURE_HAIR}"/>`,
+    eyeY: 63,
+    topY: 10,
     hatX: 62,
-    mouth: { style: MOUTH.SMILE, y: 80 },
+    mouth: { style: MOUTH.SMILE, y: 83 },
     cheekDx: 20,
   }),
 

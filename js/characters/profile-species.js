@@ -3,7 +3,7 @@
  * across the screen. The composer adds the legs, eye, cheek and accessory on
  * the anchors each drawing returns.
  */
-import { CARICATURE_HAIR, LINE, OUTLINE, THIN_OUTLINE, outlinedStroke, radialSpikes } from "./svg-style.js";
+import { CAP, CARICATURE_HAIR, LINE, OUTLINE, THIN_OUTLINE, outlinedStroke, radialSpikes } from "./svg-style.js";
 
 /** Directions (degrees) of the lizard's frill seen from the side: fanned out behind the head. */
 const LIZARD_SIDE_FRILL_DEG = Object.freeze([-150, -120, -90, -60, 150, 180, 120]);
@@ -161,10 +161,14 @@ export const PROFILE_SPECIES = {
         <circle cx="105" cy="42" r="20" fill="${p.main}" ${OUTLINE}/>
         <ellipse cx="125" cy="45" rx="4" ry="4.5" fill="${p.main}" ${THIN_OUTLINE}/>
         <rect x="116" y="50" width="9" height="4.5" rx="1.2" fill="${CARICATURE_HAIR}"/>
-        <path d="M82 42 Q82 16 105 16 Q128 18 127 36 L131 42 Q121 40 118 34 L92 34 Q90 44 80 48Z" fill="${p.accent}" ${OUTLINE}/>
+        <path d="M86 24 L123 24 L123 33 L86 33Z" fill="${CAP.BAND}" ${OUTLINE}/>
+        <path d="M80 22 Q78 8 104 6 Q130 4 136 16 Q126 26 104 26 Q86 26 80 22Z" fill="${p.accent}" ${OUTLINE}/>
+        <path d="M84 20 Q108 13 132 15" fill="none" stroke="#fff" stroke-width="2" opacity=".85"/>
+        <path d="M119 31 Q131 30 140 36 Q130 38 119 35Z" fill="${CAP.VISOR}" ${OUTLINE}/>
+        <path d="M88 30 L121 31" stroke="${CAP.CORD}" stroke-width="2.4" stroke-linecap="round"/>
       </g>`,
     eye: { x: 84, y: 19 },
-    top: { x: 75, y: -4 },
+    top: { x: 74, y: -15 },
     cheek: { x: 80, y: 29 },
   }),
 

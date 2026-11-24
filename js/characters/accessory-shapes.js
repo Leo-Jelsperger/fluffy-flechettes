@@ -2,7 +2,7 @@
  * Accessory shapes, drawn around the origin (0, 0) so they can be placed on
  * both face-on heads and side-view runners.
  */
-import { CARICATURE_HAIR, LINE, THIN_OUTLINE } from "./svg-style.js";
+import { CAP, LINE, THIN_OUTLINE } from "./svg-style.js";
 
 const FLOWER_PETALS = Object.freeze([[0, -6], [5.7, -1.9], [3.5, 4.9], [-3.5, 4.9], [-5.7, -1.9]]);
 
@@ -27,9 +27,9 @@ export const HEAD_SHAPES = Object.freeze({
     <rect x="-12" y="-9" width="24" height="6" fill="#ff9ec7"/>
     <ellipse rx="19" ry="5" fill="#7a5c8f" ${THIN_OUTLINE}/>`,
   officerCap: `<path d="M-20 -6 Q-23 -23 0 -27 Q25 -25 22 -8 Q8 -4 -20 -6Z" fill="#7d8a72" ${THIN_OUTLINE}/>
-    <rect x="-17" y="-10" width="34" height="7" rx="2" fill="${CARICATURE_HAIR}"/>
-    <path d="M-16 -2 Q1 7 19 -2 Q4 2 -16 -2Z" fill="#3a2e35" ${THIN_OUTLINE}/>
-    <path d="M-14 -3.5 Q1 0.5 16 -3.5" fill="none" stroke="#e4e2ea" stroke-width="1.5"/>`,
+    <rect x="-17" y="-10" width="34" height="7" rx="2" fill="${CAP.BAND}"/>
+    <path d="M-16 -2 Q1 7 19 -2 Q4 2 -16 -2Z" fill="${CAP.VISOR}" ${THIN_OUTLINE}/>
+    <path d="M-14 -3.5 Q1 0.5 16 -3.5" fill="none" stroke="${CAP.CORD}" stroke-width="1.5"/>`,
   crown: `<path d="M-15 0 L-16 -17 L-8 -9 L0 -21 L8 -9 L16 -17 L15 0Z" fill="#ffd36e" ${THIN_OUTLINE}/>
     <circle cy="-6" r="3" fill="#ff8cc0"/><circle cx="-9" cy="-4" r="2" fill="#9fd4ff"/><circle cx="9" cy="-4" r="2" fill="#a8e6cf"/>`,
   bow: `<path d="M0 0 L-13 -8 L-13 8Z M0 0 L13 -8 L13 8Z" fill="#ff8cc0" ${THIN_OUTLINE}/><circle r="4" fill="#ffb3d9" ${THIN_OUTLINE}/>`,
